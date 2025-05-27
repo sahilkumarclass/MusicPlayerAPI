@@ -26,6 +26,9 @@ public class SongServiceImpl implements SongService {
     @Override
     @Transactional
     public Song uploadSong(MultipartFile file, String title, String artist) {
+        if (file.isEmpty() || !file.getOriginalFilename().toLowerCase().endsWith(".mp3")) {
+            throw new IllegalArgumentException("Only .mp3 files are allowed.");
+        }
         try {
             Map<?, ?> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
                     "resource_type", "auto"
